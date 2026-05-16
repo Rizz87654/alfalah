@@ -29,6 +29,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .total-box {
+            background: #6c5ce7;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
         }
         .logout-btn {
             font-size: 14px;
@@ -41,6 +55,19 @@
         }
         .logout-btn:hover {
             background: #d63031;
+        }
+        .refresh-btn {
+            font-size: 14px;
+            background: #00b894;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .refresh-btn:hover {
+            background: #009973;
         }
         table {
             width: 100%;
@@ -69,6 +96,12 @@
             padding: 10px;
             border-radius: 8px;
         }
+        .kosong {
+            text-align: center;
+            padding: 30px;
+            color: #b2bec3;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -76,10 +109,14 @@
     <div class="container">
         <h1>
             📋 Dashboard Data Siswa
-            <button class="logout-btn" onclick="logout()">Keluar</button>
+            <div class="header-right">
+                <span class="total-box" id="totalMurid">Total: 0 murid</span>
+                <button class="refresh-btn" onclick="loadDataSiswa()">🔄 Refresh</button>
+                <button class="logout-btn" onclick="logout()">Keluar</button>
+            </div>
         </h1>
         
-        <p>Berikut data siswa yang terdaftar di sistem. (Data ini contoh statis aja, soalnya nggak connect database).</p>
+        <p>Berikut data siswa yang terdaftar di sistem. Data tersimpan di localStorage & akan muncul realtime begitu ada murid baru login.</p>
         
         <table id="dataSiswaTable">
             <thead>
@@ -92,13 +129,13 @@
                     <th>Kelas</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
                 <!-- data siswa bakal diisi pake javascript -->
             </tbody>
         </table>
         
         <div class="note">
-            ⚠️ Catatan: Ini halaman khusus admin. Kalau kamu login sebagai admin (username: admin, password: admin123), kamu akan masuk kesini. Data siswa di bawah cuma contoh dummy buat nunjukin tabel.
+            ⚠️ Catatan: Ini halaman khusus admin (username: admin, password: admin123). Data murid otomatis kesimpen pas mereka login & langsung muncul disini. Tekan tombol Refresh kalo mau update manual, atau data otomatis ke-load tiap halaman dibuka.
         </div>
     </div>
 
@@ -110,35 +147,74 @@
             window.location.href = 'login.html';
         }
 
-        // data dummy siswa, biar tabelnya ga kosong
-        const dataSiswa = [
-            { nama: "Ahmad Rizki", password: "rizki123", jk: "Laki-laki", umur: 16, kelas: "X RPL" },
-            { nama: "Siti Nurhaliza", password: "siti098", jk: "Perempuan", umur: 17, kelas: "XI TKJ" },
-            { nama: "Budi Santoso", password: "budi456", jk: "Laki-laki", umur: 16, kelas: "X TKJ" },
-            { nama: "Dewi Lestari", password: "dewi789", jk: "Perempuan", umur: 18, kelas: "XII RPL" },
-            { nama: "Rudi Hermawan", password: "rudi000", jk: "Laki-laki", umur: 17, kelas: "XI RPL" },
-            { nama: "Anisa Rahma", password: "anisa111", jk: "Perempuan", umur: 16, kelas: "X RPL" },
-            { nama: "Fajar Prasetyo", password: "fajar222", jk: "Laki-laki", umur: 18, kelas: "XII TKJ" },
-            { nama: "Mega Wati", password: "mega333", jk: "Perempuan", umur: 17, kelas: "XI RPL" }
-        ];
+        // fungsi buat ngambil data dari localStorage
+        function ambilDataSiswa() {
+            const data = localStorage.getItem('dataSiswaAlFalah');
+            if (data) {
+                return JSON.parse(data);
+            } else {
+                return [];
+            }
+        }
 
-        // render tabel pake data dummy
-        const tbody = document.querySelector('#dataSiswaTable tbody');
-        
-        dataSiswa.forEach((siswa, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${siswa.nama}</td>
-                <td>${siswa.password}</td>
-                <td>${siswa.jk}</td>
-                <td>${siswa.umur}</td>
-                <td>${siswa.kelas}</td>
-            `;
-            tbody.appendChild(row);
-        });
+        // fungsi utama buat nampilin data ke tabel + update total murid
+        function loadDataSiswa() {
+            const daftarSiswa = ambilDataSiswa();
+            const tbody = document.getElementById('tableBody');
+            const totalSpan = document.getElementById('totalMurid');
+            
+            // update total murid dulu
+            totalSpan.textContent = `Total: ${daftarSiswa.length} murid`;
+            
+            // bersihin isi tabel sebelum di render ulang
+            tbody.innerHTML = '';
+            
+            // kalo datanya kosong, kasih pesan
+            if (daftarSiswa.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="6" class="kosong">Belum ada murid yang terdaftar. Tunggu ada murid login ya...</td>`;
+                tbody.appendChild(row);
+                return;
+            }
+            
+            // render ulang tabel pake data terbaru
+            daftarSiswa.forEach((siswa, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${siswa.nama}</td>
+                    <td>${siswa.password}</td>
+                    <td>${siswa.jk}</td>
+                    <td>${siswa.umur}</td>
+                    <td>${siswa.kelas}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
 
-        // fungsi logout, balik ke login & bersihin session
+        // load data pas halaman pertama kali dibuka
+        loadDataSiswa();
+
+        // biar makin realtime, kita cek localStorage tiap 2 detik
+        // jadi kalo ada perubahan dari tab lain atau habis siswa login, langsung ke-detect
+        setInterval(() => {
+            // kita cek apakah data di localStorage berubah
+            const dataSekarang = localStorage.getItem('dataSiswaAlFalah');
+            const dataDiTabel = document.getElementById('tableBody').children.length;
+            
+            // hitung ulang total dari localStorage
+            const daftarSiswa = ambilDataSiswa();
+            
+            // kalo jumlahnya beda, refresh tabel
+            if (dataDiTabel !== daftarSiswa.length && daftarSiswa.length > 0) {
+                loadDataSiswa();
+            } else if (dataDiTabel === 1 && document.querySelector('.kosong') && daftarSiswa.length > 0) {
+                // kalo tadinya kosong terus ada data baru
+                loadDataSiswa();
+            }
+        }, 2000); // cek tiap 2 detik
+
+        // fungsi logout, balik ke login & bersihin session (tapi ga hapus data murid)
         function logout() {
             sessionStorage.clear();
             window.location.href = 'login.html';
