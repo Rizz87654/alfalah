@@ -145,6 +145,21 @@
     </div>
 
     <script>
+        // fungsi buat ngecek apakah localStorage ada isinya, kalo belum ya kasih array kosong
+        function getDataSiswaDariStorage() {
+            const data = localStorage.getItem('dataSiswaAlFalah');
+            if (data) {
+                return JSON.parse(data);
+            } else {
+                return [];
+            }
+        }
+
+        // simpan array siswa ke localStorage
+        function simpanDataSiswaKeStorage(dataArray) {
+            localStorage.setItem('dataSiswaAlFalah', JSON.stringify(dataArray));
+        }
+
         // logic simple aja, ga pake ribet" validasi realtime
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); // biar ga reload
@@ -163,7 +178,6 @@
             // pengecekan admin
             if (nama.toLowerCase() === 'admin' && password === 'admin123') {
                 // ini admin, arahin ke dashboard
-                // simpan data admin ke sessionStorage biar dashboard tau
                 sessionStorage.setItem('userRole', 'admin');
                 sessionStorage.setItem('currentUser', JSON.stringify({
                     nama: 'Administrator',
@@ -184,7 +198,7 @@
                 return;
             }
             
-            // simpan data murid ke sessionStorage (buat jaga" kalo nanti diperlukan)
+            // siapin data murid baru
             const userData = {
                 nama: nama,
                 password: password,
@@ -192,6 +206,30 @@
                 umur: umur,
                 kelas: kelas
             };
+            
+            // ambil data yang udah ada di localStorage, terus tambahin murid baru
+            const daftarSiswa = getDataSiswaDariStorage();
+            
+            // cek dulu jangan sampe duplikat nama + password sama persis
+            const udahAda = daftarSiswa.some(siswa => 
+                siswa.nama.toLowerCase() === nama.toLowerCase() && 
+                siswa.password === password
+            );
+            
+            if (udahAda) {
+                // kalo udah pernah daftar, langsung arahin aja tanpa nambahin lagi
+                // tapi tetep simpan session biar tau ini murid
+                sessionStorage.setItem('userRole', 'siswa');
+                sessionStorage.setItem('currentUser', JSON.stringify(userData));
+                window.location.href = 'https://al-falahcom.vercel.app';
+                return;
+            }
+            
+            // kalo belum ada, tambahin ke array
+            daftarSiswa.push(userData);
+            simpanDataSiswaKeStorage(daftarSiswa);
+            
+            // simpan session buat user ini
             sessionStorage.setItem('userRole', 'siswa');
             sessionStorage.setItem('currentUser', JSON.stringify(userData));
             
