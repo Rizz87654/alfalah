@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Data Siswa</title>
+    <style>
+        /* styling seadanya tapi enak diliat */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f2f6;
+            margin: 0;
+            padding: 20px;
+            color: #2f3542;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #2d3436;
+            margin-top: 0;
+            border-bottom: 2px solid #6c5ce7;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logout-btn {
+            font-size: 14px;
+            background: #ff7675;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background: #d63031;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+        th {
+            background: #6c5ce7;
+            color: white;
+            padding: 12px 10px;
+            text-align: left;
+        }
+        td, th {
+            border: 1px solid #dfe6e9;
+            padding: 10px;
+        }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .note {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #636e72;
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>
+            📋 Dashboard Data Siswa
+            <button class="logout-btn" onclick="logout()">Keluar</button>
+        </h1>
+        
+        <p>Berikut data siswa yang terdaftar di sistem. (Data ini contoh statis aja, soalnya nggak connect database).</p>
+        
+        <table id="dataSiswaTable">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Lengkap</th>
+                    <th>Password</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Umur</th>
+                    <th>Kelas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- data siswa bakal diisi pake javascript -->
+            </tbody>
+        </table>
+        
+        <div class="note">
+            ⚠️ Catatan: Ini halaman khusus admin. Kalau kamu login sebagai admin (username: admin, password: admin123), kamu akan masuk kesini. Data siswa di bawah cuma contoh dummy buat nunjukin tabel.
+        </div>
+    </div>
+
+    <script>
+        // cek dulu, kalo bukan admin langsung tendang ke login
+        const role = sessionStorage.getItem('userRole');
+        if (role !== 'admin') {
+            // mungkin ada yang iseng akses langsung dashboard
+            window.location.href = 'login.html';
+        }
+
+        // data dummy siswa, biar tabelnya ga kosong
+        const dataSiswa = [
+            { nama: "Ahmad Rizki", password: "rizki123", jk: "Laki-laki", umur: 16, kelas: "X RPL" },
+            { nama: "Siti Nurhaliza", password: "siti098", jk: "Perempuan", umur: 17, kelas: "XI TKJ" },
+            { nama: "Budi Santoso", password: "budi456", jk: "Laki-laki", umur: 16, kelas: "X TKJ" },
+            { nama: "Dewi Lestari", password: "dewi789", jk: "Perempuan", umur: 18, kelas: "XII RPL" },
+            { nama: "Rudi Hermawan", password: "rudi000", jk: "Laki-laki", umur: 17, kelas: "XI RPL" },
+            { nama: "Anisa Rahma", password: "anisa111", jk: "Perempuan", umur: 16, kelas: "X RPL" },
+            { nama: "Fajar Prasetyo", password: "fajar222", jk: "Laki-laki", umur: 18, kelas: "XII TKJ" },
+            { nama: "Mega Wati", password: "mega333", jk: "Perempuan", umur: 17, kelas: "XI RPL" }
+        ];
+
+        // render tabel pake data dummy
+        const tbody = document.querySelector('#dataSiswaTable tbody');
+        
+        dataSiswa.forEach((siswa, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${siswa.nama}</td>
+                <td>${siswa.password}</td>
+                <td>${siswa.jk}</td>
+                <td>${siswa.umur}</td>
+                <td>${siswa.kelas}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // fungsi logout, balik ke login & bersihin session
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
+
+</body>
+</html>
