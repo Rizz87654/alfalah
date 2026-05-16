@@ -3,168 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page - Al-Falah</title>
+    <title>Al-Falah - Sistem Login</title>
     <style>
-        /* styling seadanya aja, yang penting fungsional */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* container utama */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* halaman login */
+        #halamanLogin {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
         }
+        
         .login-box {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             width: 100%;
-            max-width: 360px;
-            backdrop-filter: blur(5px);
+            max-width: 400px;
+            backdrop-filter: blur(10px);
         }
-        h2 {
+        
+        .login-box h2 {
             text-align: center;
             color: #2d3436;
             margin-bottom: 5px;
-            font-weight: 600;
+            font-size: 24px;
         }
-        .subtitle {
+        
+        .login-box .subtitle {
             text-align: center;
             font-size: 14px;
             color: #636e72;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
+        
         .input-group {
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
-        label {
+        
+        .input-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: #2d3436;
             font-size: 14px;
         }
-        input, select {
+        
+        .input-group input,
+        .input-group select {
             width: 100%;
-            padding: 12px 12px;
-            border: 1.5px solid #dfe6e9;
-            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
             font-size: 15px;
-            box-sizing: border-box;
-            transition: 0.2s;
-            background: #f8f9fa;
-        }
-        input:focus, select:focus {
+            transition: all 0.3s;
+            background: #fafafa;
             outline: none;
-            border-color: #6c5ce7;
-            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
         }
-        button {
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #6c5ce7;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+        }
+        
+        .btn-login {
             width: 100%;
-            padding: 13px;
+            padding: 14px;
             background: #6c5ce7;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
         }
-        button:hover {
+        
+        .btn-login:hover {
             background: #5a4bd1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
         }
+        
         .masuk-text {
             text-align: center;
             font-size: 13px;
             color: #636e72;
-            margin-top: 8px;
+            margin-top: 12px;
+            font-style: italic;
         }
+        
         .error-msg {
-            color: #d63031;
+            color: #e74c3c;
             font-size: 13px;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             display: none;
+            background: #ffeaea;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        /* halaman dashboard */
+        #halamanDashboard {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #6c5ce7;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 28px;
+            color: #2d3436;
+        }
+        
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .total-badge {
+            background: #6c5ce7;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+        }
+        
+        .btn-refresh {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-refresh:hover {
+            background: #009973;
+            transform: scale(1.05);
+        }
+        
+        .btn-logout {
+            background: #ff7675;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background: #d63031;
+            transform: scale(1.05);
+        }
+        
+        .info-text {
+            color: #636e72;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 600px;
+        }
+        
+        thead {
+            background: #6c5ce7;
+            color: white;
+        }
+        
+        th {
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        tbody tr {
+            transition: background 0.2s;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+        
+        tbody tr:nth-child(even):hover {
+            background: #f0f0f0;
+        }
+        
+        .kosong-msg {
+            text-align: center;
+            padding: 40px;
+            color: #b2bec3;
+            font-style: italic;
+        }
+        
+        .note-box {
+            margin-top: 25px;
+            padding: 15px;
+            background: #fff9e6;
+            border-left: 4px solid #fdcb6e;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #636e72;
+        }
+        
+        /* responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .login-box {
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <h2>Selamat Datang</h2>
-        <p class="subtitle">Silakan isi data kamu dulu ya</p>
+    <div class="main-container">
         
-        <form id="loginForm">
-            <div class="input-group">
-                <label>Nama Lengkap</label>
-                <input type="text" id="namaLengkap" placeholder="cth. Ahmad Fauzi" required autocomplete="off">
+        <!-- ==================== HALAMAN LOGIN ==================== -->
+        <div id="halamanLogin">
+            <div class="login-box">
+                <h2>📚 Selamat Datang</h2>
+                <p class="subtitle">Silakan isi data diri kamu dulu ya</p>
+                
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label>👤 Nama Lengkap</label>
+                        <input type="text" id="namaLengkap" placeholder="cth. Ahmad Fauzi" required autocomplete="off">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>🔒 Password</label>
+                        <input type="password" id="password" placeholder="Masukkan password kamu" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>⚧ Jenis Kelamin</label>
+                        <select id="jenisKelamin" required>
+                            <option value="" disabled selected>-- Pilih Jenis Kelamin --</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>🎂 Umur</label>
+                        <input type="number" id="umur" placeholder="cth. 16" min="10" max="25" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>📖 Kelas</label>
+                        <select id="kelas" required>
+                            <option value="" disabled selected>-- Pilih Kelas --</option>
+                            <option value="X RPL">X RPL</option>
+                            <option value="X TKJ">X TKJ</option>
+                            <option value="XI RPL">XI RPL</option>
+                            <option value="XI TKJ">XI TKJ</option>
+                            <option value="XII RPL">XII RPL</option>
+                            <option value="XII TKJ">XII TKJ</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-login">🔑 Login</button>
+                    <div class="masuk-text">masuk</div>
+                    <div id="errorMessage" class="error-msg"></div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- ==================== HALAMAN DASHBOARD ==================== -->
+        <div id="halamanDashboard">
+            <div class="dashboard-header">
+                <h1>📋 Dashboard Admin</h1>
+                <div class="header-stats">
+                    <span class="total-badge" id="totalMurid">👥 Total: 0 murid</span>
+                    <button class="btn-refresh" onclick="loadDataSiswa()">🔄 Refresh</button>
+                    <button class="btn-logout" onclick="logout()">🚪 Keluar</button>
+                </div>
             </div>
             
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="Masukkan password" required>
+            <p class="info-text">📊 Data siswa yang sudah terdaftar akan muncul di sini secara otomatis.</p>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Lengkap</th>
+                            <th>Password</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Umur</th>
+                            <th>Kelas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- data diisi javascript -->
+                    </tbody>
+                </table>
             </div>
-
-            <div class="input-group">
-                <label>Jenis Kelamin</label>
-                <select id="jenisKelamin" required>
-                    <option value="" disabled selected>-- Pilih --</option>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                </select>
+            
+            <div class="note-box">
+                💡 <strong>Info:</strong> Login sebagai <strong>admin</strong> (username: admin, password: admin123) untuk mengakses dashboard ini. Data siswa otomatis tersimpan dan muncul realtime saat ada yang login. Klik tombol Refresh untuk memperbarui data secara manual.
             </div>
-
-            <div class="input-group">
-                <label>Umur</label>
-                <input type="number" id="umur" placeholder="cth. 16" min="10" max="20" required>
-            </div>
-
-            <div class="input-group">
-                <label>Kelas</label>
-                <select id="kelas" required>
-                    <option value="" disabled selected>-- Pilih Kelas --</option>
-                    <option value="X RPL">X RPL</option>
-                    <option value="X TKJ">X TKJ</option>
-                    <option value="XI RPL">XI RPL</option>
-                    <option value="XI TKJ">XI TKJ</option>
-                    <option value="XII RPL">XII RPL</option>
-                    <option value="XII TKJ">XII TKJ</option>
-                </select>
-            </div>
-
-            <button type="submit">Login</button>
-            <div class="masuk-text">masuk</div>
-            <div id="errorMessage" class="error-msg"></div>
-        </form>
+        </div>
+        
     </div>
 
     <script>
-        // fungsi buat ngecek apakah localStorage ada isinya, kalo belum ya kasih array kosong
-        function getDataSiswaDariStorage() {
+        // ==================== FUNGSI STORAGE ====================
+        function getDataSiswa() {
             const data = localStorage.getItem('dataSiswaAlFalah');
-            if (data) {
-                return JSON.parse(data);
-            } else {
-                return [];
-            }
+            return data ? JSON.parse(data) : [];
         }
-
-        // simpan array siswa ke localStorage
-        function simpanDataSiswaKeStorage(dataArray) {
+        
+        function simpanDataSiswa(dataArray) {
             localStorage.setItem('dataSiswaAlFalah', JSON.stringify(dataArray));
         }
-
-        // logic simple aja, ga pake ribet" validasi realtime
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // biar ga reload
+        
+        // ==================== FUNGSI LOAD DATA KE TABEL ====================
+        function loadDataSiswa() {
+            const daftarSiswa = getDataSiswa();
+            const tbody = document.getElementById('tableBody');
+            const totalSpan = document.getElementById('totalMurid');
             
-            // ambil value dari form
+            // update total
+            totalSpan.textContent = `👥 Total: ${daftarSiswa.length} murid`;
+            
+            // bersihin tabel
+            tbody.innerHTML = '';
+            
+            // kalo kosong
+            if (daftarSiswa.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="kosong-msg">😴 Belum ada murid yang terdaftar nih...</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // render data
+            daftarSiswa.forEach((siswa, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${index + 1}</strong></td>
+                    <td>${siswa.nama}</td>
+                    <td>${siswa.password}</td>
+                    <td>${siswa.jk}</td>
+                    <td>${siswa.umur} tahun</td>
+                    <td>${siswa.kelas}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // ==================== FUNGSI TAMPILKAN / SEMBUNYIKAN HALAMAN ====================
+        function tampilkanLogin() {
+            document.getElementById('halamanLogin').style.display = 'flex';
+            document.getElementById('halamanDashboard').style.display = 'none';
+        }
+        
+        function tampilkanDashboard() {
+            document.getElementById('halamanLogin').style.display = 'none';
+            document.getElementById('halamanDashboard').style.display = 'block';
+            loadDataSiswa(); // load data pas dashboard muncul
+        }
+        
+        // ==================== FUNGSI LOGOUT ====================
+        function logout() {
+            // hapus session admin
+            sessionStorage.removeItem('userRole');
+            sessionStorage.removeItem('currentUser');
+            // balik ke login
+            tampilkanLogin();
+            // reset form
+            document.getElementById('loginForm').reset();
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        // ==================== LOGIN HANDLER ====================
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             const nama = document.getElementById('namaLengkap').value.trim();
             const password = document.getElementById('password').value.trim();
             const jk = document.getElementById('jenisKelamin').value;
@@ -172,12 +464,11 @@
             const kelas = document.getElementById('kelas').value;
             const errorBox = document.getElementById('errorMessage');
             
-            // reset error dulu
+            // reset error
             errorBox.style.display = 'none';
             
-            // pengecekan admin
+            // === ADMIN LOGIN ===
             if (nama.toLowerCase() === 'admin' && password === 'admin123') {
-                // ini admin, arahin ke dashboard
                 sessionStorage.setItem('userRole', 'admin');
                 sessionStorage.setItem('currentUser', JSON.stringify({
                     nama: 'Administrator',
@@ -186,56 +477,100 @@
                     umur: '-',
                     kelas: 'Admin'
                 }));
-                window.location.href = 'dashboard.html';
+                
+                // tampilkan dashboard
+                tampilkanDashboard();
                 return;
             }
             
-            // kalo bukan admin, berarti murid biasa
-            // cek dulu semua field keisi
+            // === MURID LOGIN ===
+            // validasi kelengkapan data
             if (!nama || !password || !jk || !umur || !kelas) {
-                errorBox.textContent = 'Harap isi semua data dengan lengkap, ya!';
+                errorBox.textContent = '❌ Harap isi semua data dengan lengkap ya!';
                 errorBox.style.display = 'block';
                 return;
             }
             
-            // siapin data murid baru
             const userData = {
                 nama: nama,
                 password: password,
                 jk: jk,
-                umur: umur,
+                umur: parseInt(umur),
                 kelas: kelas
             };
             
-            // ambil data yang udah ada di localStorage, terus tambahin murid baru
-            const daftarSiswa = getDataSiswaDariStorage();
+            // ambil data existing
+            const daftarSiswa = getDataSiswa();
             
-            // cek dulu jangan sampe duplikat nama + password sama persis
+            // cek duplikat
             const udahAda = daftarSiswa.some(siswa => 
                 siswa.nama.toLowerCase() === nama.toLowerCase() && 
                 siswa.password === password
             );
             
-            if (udahAda) {
-                // kalo udah pernah daftar, langsung arahin aja tanpa nambahin lagi
-                // tapi tetep simpan session biar tau ini murid
-                sessionStorage.setItem('userRole', 'siswa');
-                sessionStorage.setItem('currentUser', JSON.stringify(userData));
-                window.location.href = 'https://al-falahcom.vercel.app';
-                return;
+            if (!udahAda) {
+                // tambahin ke array
+                daftarSiswa.push(userData);
+                simpanDataSiswa(daftarSiswa);
+                console.log('✅ Data murid baru disimpan:', userData.nama);
+            } else {
+                console.log('ℹ️ Murid sudah terdaftar sebelumnya');
             }
             
-            // kalo belum ada, tambahin ke array
-            daftarSiswa.push(userData);
-            simpanDataSiswaKeStorage(daftarSiswa);
-            
-            // simpan session buat user ini
+            // simpan session
             sessionStorage.setItem('userRole', 'siswa');
             sessionStorage.setItem('currentUser', JSON.stringify(userData));
             
-            // arahkan murid ke website al-falahcom
+            // redirect ke web resmi
             window.location.href = 'https://al-falahcom.vercel.app';
         });
+        
+        // ==================== INISIALISASI ====================
+        // cek pas halaman pertama kali dibuka, apakah ada session admin?
+        window.addEventListener('DOMContentLoaded', function() {
+            const role = sessionStorage.getItem('userRole');
+            
+            if (role === 'admin') {
+                // kalo sebelumnya udah login sebagai admin, langsung tampilin dashboard
+                tampilkanDashboard();
+            } else {
+                // kalo bukan admin atau belum login, tampilin login page
+                tampilkanLogin();
+            }
+        });
+        
+        // ==================== REALTIME CHECK ====================
+        // cek tiap 2 detik, kalo dashboard lagi kebuka & data di localStorage berubah
+        setInterval(() => {
+            const dashboardVisible = document.getElementById('halamanDashboard').style.display === 'block';
+            
+            if (dashboardVisible) {
+                const daftarSiswa = getDataSiswa();
+                const totalSekarang = document.getElementById('totalMurid').textContent;
+                const totalDariStorage = daftarSiswa.length;
+                
+                // cek apakah total di badge beda dengan data asli
+                if (!totalSekarang.includes(totalDariStorage.toString())) {
+                    console.log('🔄 Terdeteksi perubahan data, refresh tabel...');
+                    loadDataSiswa();
+                }
+            }
+        }, 2000);
+        
+        // ==================== STORAGE EVENT (UNTUK CROSS-TAB) ====================
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'dataSiswaAlFalah') {
+                const dashboardVisible = document.getElementById('halamanDashboard').style.display === 'block';
+                if (dashboardVisible) {
+                    console.log('📡 Perubahan terdeteksi dari tab lain, refresh tabel...');
+                    loadDataSiswa();
+                }
+            }
+        });
+        
+        console.log('🚀 Sistem login Al-Falah siap digunakan!');
+        console.log('👨‍💼 Admin: username="admin" password="admin123"');
+        console.log('👩‍🎓 Murid: isi data lengkap untuk ke website resmi');
     </script>
 
 </body>
